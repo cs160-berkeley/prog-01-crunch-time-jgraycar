@@ -29,8 +29,16 @@ public class ConvertCalories extends AppCompatActivity implements OnItemSelected
         calorieConversions = new HashMap<String, Double>();
         calorieConversions.put("Pushups", 100.0 / 350.0);
         calorieConversions.put("Situps", 0.5);
+        calorieConversions.put("Squats", 100.0 / 225.0);
+        calorieConversions.put("Leg Lifts", 4.0);
+        calorieConversions.put("Planks", 4.0);
         calorieConversions.put("Jumping Jacks", 10.0);
+        calorieConversions.put("Pullups", 1.0);
+        calorieConversions.put("Cycling", 100.0 / 12.0);
+        calorieConversions.put("Walking", 5.0);
         calorieConversions.put("Jogging", 100.0 / 12.0);
+        calorieConversions.put("Swimming", 100.0 / 13.0);
+        calorieConversions.put("Stair Climbing", 100.0 / 15.0);
     }
 
     public static final HashMap<String, String> activityUnits;
@@ -38,8 +46,16 @@ public class ConvertCalories extends AppCompatActivity implements OnItemSelected
         activityUnits = new HashMap<String, String>();
         activityUnits.put("Pushups", "reps");
         activityUnits.put("Situps", "reps");
+        activityUnits.put("Squats", "reps");
+        activityUnits.put("Leg Lifts", "minutes");
+        activityUnits.put("Planks", "minutes");
         activityUnits.put("Jumping Jacks", "minutes");
+        activityUnits.put("Pullups", "reps");
+        activityUnits.put("Cycling", "minutes");
+        activityUnits.put("Walking", "minutes");
         activityUnits.put("Jogging", "minutes");
+        activityUnits.put("Swimming", "minutes");
+        activityUnits.put("Stair Climbing", "minutes");
     }
 
     @Override

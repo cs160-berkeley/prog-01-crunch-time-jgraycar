@@ -52,8 +52,9 @@ public class ActivityArrayAdapter extends ArrayAdapter<String> {
         double itemActivityConversion = ConvertCalories.calorieConversions.get(activity);
         double currentActivityConversion = ConvertCalories.calorieConversions.get(currentActivity);
         double numCalories = currentActivityConversion * numActivityDone;
+        String converted = new DecimalFormat("#,###.##").format(numCalories / itemActivityConversion);
 
-        amountTextView.setText(new DecimalFormat("#,###.##").format(numCalories / itemActivityConversion));
+        amountTextView.setText(converted + " " + ConvertCalories.activityUnits.get(activity));
 
         return rowView;
     }

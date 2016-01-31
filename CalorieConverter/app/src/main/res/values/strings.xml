@@ -3,7 +3,15 @@
     <string-array name="activities_array">
         <item>Pushups</item>
         <item>Situps</item>
+        <item>Squats</item>
+        <item>Leg Lifts</item>
+        <item>Planks</item>
         <item>Jumping Jacks</item>
+        <item>Pullups</item>
+        <item>Cycling</item>
+        <item>Walking</item>
         <item>Jogging</item>
+        <item>Swimming</item>
+        <item>Stair Climbing</item>
     </string-array>
 </resources>
