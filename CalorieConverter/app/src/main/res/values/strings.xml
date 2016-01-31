@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Calorie Converter</string>
+    <string-array name="activities_array">
+        <item>Pushups</item>
+        <item>Situps</item>
+        <item>Jumping Jacks</item>
+        <item>Jogging</item>
+    </string-array>
 </resources>
