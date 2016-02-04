@@ -49,12 +49,12 @@ public class ActivityArrayAdapter extends ArrayAdapter<String> {
         }
 
         String currentActivity = activityTypeSpinner.getSelectedItem().toString();
-        double itemActivityConversion = ConvertCalories.calorieConversions.get(activity);
-        double currentActivityConversion = ConvertCalories.calorieConversions.get(currentActivity);
+        double itemActivityConversion = MainActivity.calorieConversions.get(activity);
+        double currentActivityConversion = MainActivity.calorieConversions.get(currentActivity);
         double numCalories = currentActivityConversion * numActivityDone;
         String converted = new DecimalFormat("#,###.##").format(numCalories / itemActivityConversion);
 
-        amountTextView.setText(converted + " " + ConvertCalories.activityUnits.get(activity));
+        amountTextView.setText(converted + " " + MainActivity.activityUnits.get(activity));
 
         return rowView;
     }

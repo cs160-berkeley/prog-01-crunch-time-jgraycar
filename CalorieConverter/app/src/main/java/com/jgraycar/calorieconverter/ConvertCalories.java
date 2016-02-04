@@ -1,15 +1,16 @@
 package com.jgraycar.calorieconverter;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
-
+import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.text.TextWatcher;
 import android.text.Editable;
 import android.widget.Spinner;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -17,63 +18,66 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.EditText;
 
-public class ConvertCalories extends AppCompatActivity implements OnItemSelectedListener {
+import java.text.DecimalFormat;
+
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link ConvertCalories.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link ConvertCalories#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class ConvertCalories extends Fragment implements OnItemSelectedListener {
     TextView activityUnitType;
     TextView calorieDisplay;
     EditText numActivity;
     Spinner activityTypeSpinner;
     ListView activityConversionsList;
 
-    public static final HashMap<String, Double> calorieConversions;
-    static {
-        calorieConversions = new HashMap<String, Double>();
-        calorieConversions.put("Pushups", 100.0 / 350.0);
-        calorieConversions.put("Situps", 0.5);
-        calorieConversions.put("Squats", 100.0 / 225.0);
-        calorieConversions.put("Leg Lifts", 4.0);
-        calorieConversions.put("Planks", 4.0);
-        calorieConversions.put("Jumping Jacks", 10.0);
-        calorieConversions.put("Pullups", 1.0);
-        calorieConversions.put("Cycling", 100.0 / 12.0);
-        calorieConversions.put("Walking", 5.0);
-        calorieConversions.put("Jogging", 100.0 / 12.0);
-        calorieConversions.put("Swimming", 100.0 / 13.0);
-        calorieConversions.put("Stair Climbing", 100.0 / 15.0);
+
+    private OnFragmentInteractionListener mListener;
+
+    public ConvertCalories() {
+        // Required empty public constructor
     }
 
-    public static final HashMap<String, String> activityUnits;
-    static {
-        activityUnits = new HashMap<String, String>();
-        activityUnits.put("Pushups", "reps");
-        activityUnits.put("Situps", "reps");
-        activityUnits.put("Squats", "reps");
-        activityUnits.put("Leg Lifts", "minutes");
-        activityUnits.put("Planks", "minutes");
-        activityUnits.put("Jumping Jacks", "minutes");
-        activityUnits.put("Pullups", "reps");
-        activityUnits.put("Cycling", "minutes");
-        activityUnits.put("Walking", "minutes");
-        activityUnits.put("Jogging", "minutes");
-        activityUnits.put("Swimming", "minutes");
-        activityUnits.put("Stair Climbing", "minutes");
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment BlankFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static ConvertCalories newInstance() {
+        ConvertCalories fragment = new ConvertCalories();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_convert_calories);
+    }
 
-        activityTypeSpinner = (Spinner) findViewById(R.id.spinner);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_convert_calories, container, false);
+        activityTypeSpinner = (Spinner) view.findViewById(R.id.spinner);
         activityTypeSpinner.setOnItemSelectedListener(this);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.activities_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         activityTypeSpinner.setAdapter(adapter);
 
-        numActivity = (EditText) findViewById(R.id.num_activity);
+        numActivity = (EditText) view.findViewById(R.id.num_activity);
         numActivity.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
             }
@@ -89,27 +93,15 @@ public class ConvertCalories extends AppCompatActivity implements OnItemSelected
             }
         });
 
-        activityUnitType = (TextView) findViewById(R.id.activity_type_textView);
-        calorieDisplay = (TextView) findViewById(R.id.calorie_count_textView);
+        activityUnitType = (TextView) view.findViewById(R.id.activity_type_textView);
+        calorieDisplay = (TextView) view.findViewById(R.id.calorie_count_textView);
 
-        activityConversionsList = (ListView) findViewById(R.id.activity_conversions_listView);
+        activityConversionsList = (ListView) view.findViewById(R.id.activity_conversions_listView);
         Resources res = getResources();
-        ActivityArrayAdapter listAdapter = new ActivityArrayAdapter(this,
+        ActivityArrayAdapter listAdapter = new ActivityArrayAdapter(view.getContext(),
                 res.getStringArray(R.array.activities_array), numActivity, activityTypeSpinner);
         activityConversionsList.setAdapter(listAdapter);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        String activity = (String) parent.getItemAtPosition(pos);
-        activityUnitType.setText(activityUnits.get(activity) + " of");
-        updateDisplay();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
+        return view;
     }
 
     public void updateDisplay() {
@@ -121,9 +113,61 @@ public class ConvertCalories extends AppCompatActivity implements OnItemSelected
             numActivityDone = Double.parseDouble(numActivityDoneStr);
         }
 
-        double calorieConversion = calorieConversions.get(activity);
+        double calorieConversion = MainActivity.calorieConversions.get(activity);
         String calories = new DecimalFormat("#,###.##").format(calorieConversion * numActivityDone);
         calorieDisplay.setText(calories);
         activityConversionsList.invalidateViews();
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        String activity = (String) parent.getItemAtPosition(pos);
+        activityUnitType.setText(MainActivity.activityUnits.get(activity) + " of");
+        updateDisplay();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 }
