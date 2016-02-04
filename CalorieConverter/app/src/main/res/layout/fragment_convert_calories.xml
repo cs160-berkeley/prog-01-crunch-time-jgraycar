@@ -12,36 +12,6 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:gravity="center"
-            android:ems="10"
-            android:maxLength="5"
-            android:id="@+id/num_activity"
-            android:layout_weight="1" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="reps"
-            android:gravity="center"
-            android:id="@+id/activity_type_textView"
-            android:layout_weight="2" />
-
-        <Spinner
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            android:layout_weight="3" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
@@ -52,19 +22,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="burns"
+            android:text="To burn"
             android:paddingRight="10dp"
             android:textColor="#FFFFFF"
             android:id="@+id/textView" />
 
-        <TextView
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="0"
+            android:text="100"
+            android:maxLength="7"
             android:textColor="#FFFFFF"
             android:textSize="50sp"
-            android:id="@+id/calorie_count_textView" />
+            android:id="@+id/num_calories" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -79,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="which is the same as..."
+        android:text="do one of the following:"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:id="@+id/textView2"

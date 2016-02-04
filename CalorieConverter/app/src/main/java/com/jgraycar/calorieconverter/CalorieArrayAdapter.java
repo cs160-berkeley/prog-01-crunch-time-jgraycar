@@ -9,24 +9,21 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Spinner;
 
 /**
- * Created by Joel on 1/31/16.
+ * Created by Joel on 2/4/16.
  */
-public class ActivityArrayAdapter extends ArrayAdapter<String> {
+public class CalorieArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
-    private final EditText numActivity;
-    private final Spinner activityTypeSpinner;
+    private final EditText numCalories;
 
-    public ActivityArrayAdapter(Context context, String[] values,
-                                EditText numActivity, Spinner activityTypeSpinner) {
+    public CalorieArrayAdapter(Context context, String[] values,
+                                EditText numCalories) {
         super(context, R.layout.activity_list_row, values);
         this.context = context;
         this.values = values;
-        this.numActivity = numActivity;
-        this.activityTypeSpinner = activityTypeSpinner;
+        this.numCalories = numCalories;
     }
 
     @Override
@@ -41,17 +38,14 @@ public class ActivityArrayAdapter extends ArrayAdapter<String> {
 
         TextView amountTextView = (TextView) rowView.findViewById(R.id.list_item_amount_textView);
 
-        String numActivityDoneStr = numActivity.getText().toString();
-        double numActivityDone = 0;
-        if (!numActivityDoneStr.equals("")) {
-            numActivityDone = Double.parseDouble(numActivityDoneStr);
+        String numCalorieStr = numCalories.getText().toString();
+        double numCalorie = 0;
+        if (!numCalorieStr.equals("")) {
+            numCalorie = Double.parseDouble(numCalorieStr);
         }
 
-        String currentActivity = activityTypeSpinner.getSelectedItem().toString();
         double itemActivityConversion = MainActivity.calorieConversions.get(activity);
-        double currentActivityConversion = MainActivity.calorieConversions.get(currentActivity);
-        double numCalories = currentActivityConversion * numActivityDone;
-        String converted = new DecimalFormat("#,###.##").format(numCalories / itemActivityConversion);
+        String converted = new DecimalFormat("#,###.##").format(numCalorie / itemActivityConversion);
 
         amountTextView.setText(converted + " " + MainActivity.activityUnits.get(activity));
 

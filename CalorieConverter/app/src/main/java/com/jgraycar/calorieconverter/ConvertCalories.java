@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.text.TextWatcher;
 import android.text.Editable;
-import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -29,11 +28,8 @@ import java.text.DecimalFormat;
  * Use the {@link ConvertCalories#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ConvertCalories extends Fragment implements OnItemSelectedListener {
-    TextView activityUnitType;
-    TextView calorieDisplay;
-    EditText numActivity;
-    Spinner activityTypeSpinner;
+public class ConvertCalories extends Fragment {
+    EditText numCalories;
     ListView activityConversionsList;
 
 
@@ -67,18 +63,9 @@ public class ConvertCalories extends Fragment implements OnItemSelectedListener 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_convert_calories, container, false);
-        activityTypeSpinner = (Spinner) view.findViewById(R.id.spinner);
-        activityTypeSpinner.setOnItemSelectedListener(this);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
-                R.array.activities_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        activityTypeSpinner.setAdapter(adapter);
 
-        numActivity = (EditText) view.findViewById(R.id.num_activity);
-        numActivity.addTextChangedListener(new TextWatcher() {
+        numCalories = (EditText) view.findViewById(R.id.num_calories);
+        numCalories.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
             }
 
@@ -93,29 +80,15 @@ public class ConvertCalories extends Fragment implements OnItemSelectedListener 
             }
         });
 
-        activityUnitType = (TextView) view.findViewById(R.id.activity_type_textView);
-        calorieDisplay = (TextView) view.findViewById(R.id.calorie_count_textView);
-
         activityConversionsList = (ListView) view.findViewById(R.id.activity_conversions_listView);
         Resources res = getResources();
-        ActivityArrayAdapter listAdapter = new ActivityArrayAdapter(view.getContext(),
-                res.getStringArray(R.array.activities_array), numActivity, activityTypeSpinner);
+        CalorieArrayAdapter listAdapter = new CalorieArrayAdapter(view.getContext(),
+                res.getStringArray(R.array.activities_array), numCalories);
         activityConversionsList.setAdapter(listAdapter);
         return view;
     }
 
     public void updateDisplay() {
-        String activity = activityTypeSpinner.getSelectedItem().toString();
-
-        String numActivityDoneStr = numActivity.getText().toString();
-        double numActivityDone = 0;
-        if (!numActivityDoneStr.equals("")) {
-            numActivityDone = Double.parseDouble(numActivityDoneStr);
-        }
-
-        double calorieConversion = MainActivity.calorieConversions.get(activity);
-        String calories = new DecimalFormat("#,###.##").format(calorieConversion * numActivityDone);
-        calorieDisplay.setText(calories);
         activityConversionsList.invalidateViews();
     }
 
@@ -158,16 +131,4 @@ public class ConvertCalories extends Fragment implements OnItemSelectedListener 
         void onFragmentInteraction(Uri uri);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
-        String activity = (String) parent.getItemAtPosition(pos);
-        activityUnitType.setText(MainActivity.activityUnits.get(activity) + " of");
-        updateDisplay();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-    }
 }
