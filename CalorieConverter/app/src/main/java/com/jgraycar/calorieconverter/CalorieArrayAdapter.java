@@ -19,18 +19,19 @@ public class CalorieArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
     private final EditText numCalories;
+    private final SharedPreferences settings;
 
     public CalorieArrayAdapter(Context context, String[] values,
-                                EditText numCalories) {
+                                EditText numCalories, SharedPreferences settings) {
         super(context, R.layout.activity_list_row, values);
         this.context = context;
         this.values = values;
         this.numCalories = numCalories;
+        this.settings = settings;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SharedPreferences settings = ((Activity) this.context).getPreferences(Context.MODE_PRIVATE);
         int weight = settings.getInt("weight", 150);
 
         LayoutInflater inflater = (LayoutInflater) context
@@ -50,7 +51,7 @@ public class CalorieArrayAdapter extends ArrayAdapter<String> {
         } catch (NumberFormatException e) {
         }
 
-        double numActivity= MainActivity.activities.get(activity).numActivity(numCalorie);
+        double numActivity= MainActivity.activities.get(activity).numActivity(numCalorie, weight);
         String converted = new DecimalFormat("#,###.##").format(numActivity);
 
         amountTextView.setText(converted + " " + MainActivity.activities.get(activity).unitType);

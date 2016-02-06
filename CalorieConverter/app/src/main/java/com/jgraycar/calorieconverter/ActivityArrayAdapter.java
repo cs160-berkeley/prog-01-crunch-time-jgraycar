@@ -3,6 +3,7 @@ package com.jgraycar.calorieconverter;
 import java.text.DecimalFormat;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +20,22 @@ public class ActivityArrayAdapter extends ArrayAdapter<String> {
     private final String[] values;
     private final EditText numActivity;
     private final Spinner activityTypeSpinner;
+    private final SharedPreferences settings;
 
-    public ActivityArrayAdapter(Context context, String[] values,
-                                EditText numActivity, Spinner activityTypeSpinner) {
+    public ActivityArrayAdapter(Context context, String[] values, EditText numActivity,
+                                 Spinner activityTypeSpinner, SharedPreferences settings) {
         super(context, R.layout.activity_list_row, values);
         this.context = context;
         this.values = values;
         this.numActivity = numActivity;
         this.activityTypeSpinner = activityTypeSpinner;
+        this.settings = settings;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        int weight = settings.getInt("weight", 150);
+
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.activity_list_row, parent, false);

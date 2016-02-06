@@ -77,7 +77,7 @@ public class ConvertCalories extends UpdateableFragment {
         activityConversionsList = (ListView) view.findViewById(R.id.activity_conversions_listView);
         Resources res = getResources();
         CalorieArrayAdapter listAdapter = new CalorieArrayAdapter(view.getContext(),
-                res.getStringArray(R.array.activities_array), numCalories);
+                res.getStringArray(R.array.activities_array), numCalories, getActivity().getPreferences(Context.MODE_PRIVATE));
         activityConversionsList.setAdapter(listAdapter);
         return view;
     }

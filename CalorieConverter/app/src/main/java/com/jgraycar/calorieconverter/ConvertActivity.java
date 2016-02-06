@@ -99,7 +99,8 @@ public class ConvertActivity extends UpdateableFragment implements OnItemSelecte
         activityConversionsList = (ListView) view.findViewById(R.id.activity_conversions_listView);
         Resources res = getResources();
         ActivityArrayAdapter listAdapter = new ActivityArrayAdapter(view.getContext(),
-                res.getStringArray(R.array.activities_array), numActivity, activityTypeSpinner);
+                res.getStringArray(R.array.activities_array), numActivity, activityTypeSpinner,
+                getActivity().getPreferences(Context.MODE_PRIVATE));
         activityConversionsList.setAdapter(listAdapter);
         return view;
     }
@@ -114,7 +115,8 @@ public class ConvertActivity extends UpdateableFragment implements OnItemSelecte
         } catch (NumberFormatException e) {
         }
 
-        double caloriesBurned = MainActivity.activities.get(activity).numCalories(numActivityDone);
+        int weight = getActivity().getPreferences(Context.MODE_PRIVATE).getInt("weight", 150);
+        double caloriesBurned = MainActivity.activities.get(activity).numCalories(numActivityDone, weight);
         String calories = new DecimalFormat("#,###.##").format(caloriesBurned);
         calorieDisplay.setText(calories);
         activityConversionsList.invalidateViews();
