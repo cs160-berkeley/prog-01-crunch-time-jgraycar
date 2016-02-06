@@ -2,7 +2,9 @@ package com.jgraycar.calorieconverter;
 
 import java.text.DecimalFormat;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,9 @@ public class CalorieArrayAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SharedPreferences settings = ((Activity) this.context).getPreferences(Context.MODE_PRIVATE);
+        int weight = settings.getInt("weight", 150);
+
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.activity_list_row, parent, false);
@@ -40,14 +45,15 @@ public class CalorieArrayAdapter extends ArrayAdapter<String> {
 
         String numCalorieStr = numCalories.getText().toString();
         double numCalorie = 0;
-        if (!numCalorieStr.equals("")) {
+        try {
             numCalorie = Double.parseDouble(numCalorieStr);
+        } catch (NumberFormatException e) {
         }
 
-        double itemActivityConversion = MainActivity.calorieConversions.get(activity);
-        String converted = new DecimalFormat("#,###.##").format(numCalorie / itemActivityConversion);
+        double numActivity= MainActivity.activities.get(activity).numActivity(numCalorie);
+        String converted = new DecimalFormat("#,###.##").format(numActivity);
 
-        amountTextView.setText(converted + " " + MainActivity.activityUnits.get(activity));
+        amountTextView.setText(converted + " " + MainActivity.activities.get(activity).unitType);
 
         return rowView;
     }

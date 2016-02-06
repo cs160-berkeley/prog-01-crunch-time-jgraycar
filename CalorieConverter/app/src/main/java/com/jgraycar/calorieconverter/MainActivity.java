@@ -1,5 +1,13 @@
 package com.jgraycar.calorieconverter;
 
+import android.app.Dialog;
+import android.app.AlertDialog;
+
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,10 +18,16 @@ import android.support.v4.view.ViewPager;
 
 import android.os.Bundle;
 
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import android.net.Uri;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -21,38 +35,23 @@ public class MainActivity extends AppCompatActivity
         implements ConvertActivity.OnFragmentInteractionListener,
         ConvertCalories.OnFragmentInteractionListener {
 
-    public static final HashMap<String, Double> calorieConversions;
-    static {
-        calorieConversions = new HashMap<String, Double>();
-        calorieConversions.put("Pushups", 100.0 / 350.0);
-        calorieConversions.put("Situps", 0.5);
-        calorieConversions.put("Squats", 100.0 / 225.0);
-        calorieConversions.put("Leg Lifts", 4.0);
-        calorieConversions.put("Planks", 4.0);
-        calorieConversions.put("Jumping Jacks", 10.0);
-        calorieConversions.put("Pullups", 1.0);
-        calorieConversions.put("Cycling", 100.0 / 12.0);
-        calorieConversions.put("Walking", 5.0);
-        calorieConversions.put("Jogging", 100.0 / 12.0);
-        calorieConversions.put("Swimming", 100.0 / 13.0);
-        calorieConversions.put("Stair Climbing", 100.0 / 15.0);
-    }
+    SharedPreferences settings;
 
-    public static final HashMap<String, String> activityUnits;
+    public static final HashMap<String, PhysicalActivity> activities;
     static {
-        activityUnits = new HashMap<String, String>();
-        activityUnits.put("Pushups", "reps");
-        activityUnits.put("Situps", "reps");
-        activityUnits.put("Squats", "reps");
-        activityUnits.put("Leg Lifts", "minutes");
-        activityUnits.put("Planks", "minutes");
-        activityUnits.put("Jumping Jacks", "minutes");
-        activityUnits.put("Pullups", "reps");
-        activityUnits.put("Cycling", "minutes");
-        activityUnits.put("Walking", "minutes");
-        activityUnits.put("Jogging", "minutes");
-        activityUnits.put("Swimming", "minutes");
-        activityUnits.put("Stair Climbing", "minutes");
+        activities = new HashMap<String, PhysicalActivity>();
+        activities.put("Pushups", new PhysicalActivity(100.0 / 350.0, "reps"));
+        activities.put("Situps", new PhysicalActivity(0.5, "reps"));
+        activities.put("Squats", new PhysicalActivity(100.0 / 225.0, "reps"));
+        activities.put("Leg Lifts", new PhysicalActivity(4.0, "minutes"));
+        activities.put("Planks", new PhysicalActivity(4.0, "minutes"));
+        activities.put("Jumping Jacks", new PhysicalActivity(10.0, "minutes"));
+        activities.put("Pullups", new PhysicalActivity(1.0, "reps"));
+        activities.put("Cycling", new PhysicalActivity(100.0 / 12.0, "minutes"));
+        activities.put("Walking", new PhysicalActivity(5.0, "minutes"));
+        activities.put("Jogging", new PhysicalActivity(100.0 / 12.0, "minutes"));
+        activities.put("Swimming", new PhysicalActivity(100.0 / 13.0, "minutes"));
+        activities.put("Stair Climbing", new PhysicalActivity(100.0 / 15.0, "minutes"));
     }
 
     /**
@@ -88,6 +87,7 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        settings = getPreferences(Context.MODE_PRIVATE);
     }
 
 
@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            openWeightDialog();
             return true;
         }
 
@@ -118,6 +119,20 @@ public class MainActivity extends AppCompatActivity
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        private Fragment mCurrentFragment;
+
+        public Fragment getCurrentFragment() {
+            return mCurrentFragment;
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            if (getCurrentFragment() != object) {
+                mCurrentFragment = ((Fragment) object);
+            }
+            super.setPrimaryItem(container, position, object);
+        }
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -151,6 +166,61 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onFragmentInteraction(Uri uri){
+    }
+
+    public void openWeightDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_edit_weight, null);
+
+        builder.setView(view);
+
+        EditText weightEditText = (EditText) view.findViewById(R.id.weight_editText);
+        int weight = settings.getInt("weight", 150);
+        weightEditText.setText("");
+        weightEditText.append(String.valueOf(weight));
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                // All the fun happens in DialogClickListener
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+        builder.setTitle("Set your weight");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        Button theButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        theButton.setOnClickListener(new DialogClickListener(dialog));
+    }
+
+    private class DialogClickListener implements View.OnClickListener {
+        private final Dialog dialog;
+        public DialogClickListener(Dialog dialog) {
+            this.dialog = dialog;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // put your code here
+            EditText weightEditText = (EditText) dialog.findViewById(R.id.weight_editText);
+            String inputtedWeight = weightEditText.getText().toString();
+            if (inputtedWeight.length() > 0){
+                Editor editor = settings.edit();
+                editor.putInt("weight", Integer.parseInt(inputtedWeight));
+                editor.commit();
+                ((UpdateableFragment) mSectionsPagerAdapter.getCurrentFragment()).updateDisplay();
+                dialog.dismiss();
+            } else {
+                Toast.makeText(MainActivity.this, "Please enter a valid weight", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 }

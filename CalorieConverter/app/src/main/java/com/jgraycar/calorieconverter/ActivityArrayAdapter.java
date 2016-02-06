@@ -47,13 +47,13 @@ public class ActivityArrayAdapter extends ArrayAdapter<String> {
             numActivityDone = Double.parseDouble(numActivityDoneStr);
         }
 
-        String currentActivity = activityTypeSpinner.getSelectedItem().toString();
-        double itemActivityConversion = MainActivity.calorieConversions.get(activity);
-        double currentActivityConversion = MainActivity.calorieConversions.get(currentActivity);
-        double numCalories = currentActivityConversion * numActivityDone;
-        String converted = new DecimalFormat("#,###.##").format(numCalories / itemActivityConversion);
+        PhysicalActivity physActivity = MainActivity.activities.get(activity);
 
-        amountTextView.setText(converted + " " + MainActivity.activityUnits.get(activity));
+        String currentActivity = activityTypeSpinner.getSelectedItem().toString();
+        double convertedNumActivity = physActivity.convertActivity(currentActivity, numActivityDone);
+        String converted = new DecimalFormat("#,###.##").format(convertedNumActivity);
+
+        amountTextView.setText(converted + " " + physActivity.unitType);
 
         return rowView;
     }

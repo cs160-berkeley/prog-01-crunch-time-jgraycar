@@ -29,7 +29,7 @@ import java.text.DecimalFormat;
  * Use the {@link ConvertActivity#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ConvertActivity extends Fragment implements OnItemSelectedListener {
+public class ConvertActivity extends UpdateableFragment implements OnItemSelectedListener {
     TextView activityUnitType;
     TextView calorieDisplay;
     EditText numActivity;
@@ -47,7 +47,7 @@ public class ConvertActivity extends Fragment implements OnItemSelectedListener 
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment BlankFragment.
+     * @return A new instance of fragment ConertActivity.
      */
     // TODO: Rename and change types and number of parameters
     public static ConvertActivity newInstance() {
@@ -109,12 +109,13 @@ public class ConvertActivity extends Fragment implements OnItemSelectedListener 
 
         String numActivityDoneStr = numActivity.getText().toString();
         double numActivityDone = 0;
-        if (!numActivityDoneStr.equals("")) {
+        try {
             numActivityDone = Double.parseDouble(numActivityDoneStr);
+        } catch (NumberFormatException e) {
         }
 
-        double calorieConversion = MainActivity.calorieConversions.get(activity);
-        String calories = new DecimalFormat("#,###.##").format(calorieConversion * numActivityDone);
+        double caloriesBurned = MainActivity.activities.get(activity).numCalories(numActivityDone);
+        String calories = new DecimalFormat("#,###.##").format(caloriesBurned);
         calorieDisplay.setText(calories);
         activityConversionsList.invalidateViews();
     }
@@ -162,7 +163,7 @@ public class ConvertActivity extends Fragment implements OnItemSelectedListener 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         String activity = (String) parent.getItemAtPosition(pos);
-        activityUnitType.setText(MainActivity.activityUnits.get(activity) + " of");
+        activityUnitType.setText(MainActivity.activities.get(activity).unitType + " of");
         updateDisplay();
     }
 

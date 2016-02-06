@@ -10,14 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.text.TextWatcher;
 import android.text.Editable;
-import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.EditText;
-
-import java.text.DecimalFormat;
 
 
 /**
@@ -28,7 +22,7 @@ import java.text.DecimalFormat;
  * Use the {@link ConvertCalories#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ConvertCalories extends Fragment {
+public class ConvertCalories extends UpdateableFragment {
     EditText numCalories;
     ListView activityConversionsList;
 
@@ -43,7 +37,7 @@ public class ConvertCalories extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment BlankFragment.
+     * @return A new instance of fragment ConvertCalories.
      */
     // TODO: Rename and change types and number of parameters
     public static ConvertCalories newInstance() {
